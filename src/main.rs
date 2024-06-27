@@ -3,49 +3,49 @@ use std::time::{Duration, Instant};
 //use rand::prelude::*;
 
 const PIECES: [(&'static str, [Block; 4]); 7] = [
-    ("Square1", [
+    ("square1", [
         Block {pos: Pos { x: 5, y: 0 } },
         Block {pos: Pos { x: 5, y: 1 } },
         Block {pos: Pos { x: 6, y: 0 } },
         Block {pos: Pos { x: 6, y: 1 } },
     ]),
 
-    ("Left1", [
+    ("left1", [
         Block {pos: Pos { x: 5, y: 0 } },
         Block {pos: Pos { x: 5, y: 1 } },
         Block {pos: Pos { x: 6, y: 1 } },
         Block {pos: Pos { x: 7, y: 1 } },
     ]),
 
-    ("Light1", [
+    ("light1", [
         Block {pos: Pos { x: 4, y: 1 } },
         Block {pos: Pos { x: 5, y: 1 } },
         Block {pos: Pos { x: 6, y: 1 } },
         Block {pos: Pos { x: 6, y: 0 } },
     ]),
 
-    ("Zig1", [
+    ("zig1", [
         Block {pos: Pos { x: 5, y: 1 } },
         Block {pos: Pos { x: 6, y: 1 } },
         Block {pos: Pos { x: 6, y: 0 } },
         Block {pos: Pos { x: 7, y: 0 } },
     ]),
 
-    ("Zag1", [
+    ("zag1", [
         Block {pos: Pos { x: 4, y: 0 } },
         Block {pos: Pos { x: 5, y: 0 } },
         Block {pos: Pos { x: 5, y: 1 } },
         Block {pos: Pos { x: 6, y: 1 } },
     ]),
 
-    ("Pole1", [
+    ("pole1", [
         Block {pos: Pos { x: 4, y: 0 } },
         Block {pos: Pos { x: 5, y: 0 } },
         Block {pos: Pos { x: 6, y: 0 } },
         Block {pos: Pos { x: 7, y: 0 } },
     ]),
 
-    ("Tee1", [
+    ("tee1", [
         Block {pos: Pos { x: 4, y: 1 } },
         Block {pos: Pos { x: 5, y: 1 } },
         Block {pos: Pos { x: 5, y: 0 } },
@@ -61,8 +61,8 @@ struct World {
 
 #[derive(Clone)]
 struct Pos {
-    x: u8,
-    y: u8,
+    x: i16,
+    y: i16,
 }
 
 #[derive(Clone)]
@@ -74,7 +74,7 @@ struct Block {
 
 #[derive(Clone)]
 struct Piece {
-    variant: String,
+    variant: &'static str,
     blocks: [Block; 4],
     //rotation_style: &str,
     // Piece is 4 blocks
@@ -137,7 +137,7 @@ fn update_game(mut game: World, mut piece: Piece, mut next_piece: Piece, all_pie
 
 fn create_pieces() -> [Piece; 7] {
     PIECES.map(|(variant, blocks)| Piece {
-        variant: variant.to_string(),
+        variant: variant,
         blocks,
     })
 }
@@ -190,101 +190,208 @@ fn move_right(mut piece: Piece, game: World) -> Piece {
     piece
 }
 
-fn turn_left(mut piece: Piece, game: World) -> Piece {
-    println!("{}", piece.variant);
-    let Square = "Square1".to_string();
-    let Left1 = "Left1".to_string();
-    let Left2 = "Left2".to_string();
-    let Left3 = "Left3".to_string();
-    let Left4 = "Left4".to_string();
-    let Light1 = "Light1".to_string();
-    let Light2 = "Light2".to_string();
-    let Light3 = "Light3".to_string();
-    let Light4 = "Light4".to_string();
-    let Zig1 = "Zig1".to_string();
-    let Zig2 = "Zig2".to_string();
-    let Zag1 = "Zag1".to_string();
-    let Zag2 = "Zag2".to_string();
-    let Pole1 = "Pole1".to_string();
-    let Pole2 = "Pole2".to_string();
-    let Tee1 = "Tee1".to_string();
-    let Tee2 = "Tee2".to_string();
-    let Tee3 = "Tee3".to_string();
-    let Tee4 = "Tee4".to_string();
+fn turn_clock(mut piece: Piece) -> Piece {
     match piece.variant {
-        ref Square => {}
-        ref Left1 => {
+        "square1" => {
+        }
+        "left1" => {
             piece.blocks[0].pos.x += 2;
             piece.blocks[1].pos.x += 1;
             piece.blocks[1].pos.y -= 1;
             piece.blocks[3].pos.x -= 1;
             piece.blocks[3].pos.y += 1;
+            piece.variant = "left2";
         }
-        ref Left2 => {
+        "left2" => {
             piece.blocks[0].pos.y += 2;
             piece.blocks[1].pos.x += 1;
             piece.blocks[1].pos.y += 1;
             piece.blocks[3].pos.x -= 1;
             piece.blocks[3].pos.y -= 1;
+            piece.variant = "left3";
         }
-        ref Left3 => {
+        "left3" => {
             piece.blocks[0].pos.x -= 2;
             piece.blocks[1].pos.x -= 1;
             piece.blocks[1].pos.y += 1;
             piece.blocks[3].pos.x += 1;
             piece.blocks[3].pos.y -= 1;
+            piece.variant = "left4";
         }
-        ref Left4 => {
+        "left4" => {
             piece.blocks[0].pos.y -= 2;
             piece.blocks[1].pos.x -= 1;
             piece.blocks[1].pos.y -= 1;
             piece.blocks[3].pos.x += 1;
             piece.blocks[3].pos.y += 1;
+            piece.variant = "left1";
         }
-        ref Light1 => {
-            println!("turning light");
+        "light1" => {
             piece.blocks[0].pos.x += 1;
             piece.blocks[0].pos.y -= 1;
             piece.blocks[2].pos.x -= 1;
             piece.blocks[2].pos.y += 1;
             piece.blocks[3].pos.y += 2;
+            piece.variant = "light2";
         }
-        ref Light2 => {
+        "light2" => {
             piece.blocks[0].pos.x += 1;
             piece.blocks[0].pos.y += 1;
             piece.blocks[2].pos.x -= 1;
             piece.blocks[2].pos.y -= 1;
             piece.blocks[3].pos.x -= 2;
+            piece.variant = "light3";
         }
-        ref Light3 => {
+        "light3" => {
             piece.blocks[0].pos.x -= 1;
             piece.blocks[0].pos.y += 1;
             piece.blocks[2].pos.x += 1;
             piece.blocks[2].pos.y -= 1;
             piece.blocks[3].pos.y -= 2;
+            piece.variant = "light4";
         }
-        ref Light4 => {
+        "light4" => {
             piece.blocks[0].pos.x -= 1;
             piece.blocks[0].pos.y -= 1;
             piece.blocks[2].pos.x += 1;
             piece.blocks[2].pos.y += 1;
             piece.blocks[3].pos.x += 2;
+            piece.variant = "light1";
         }
-        ref Zig1 => {}
-        ref Zig2 => {}
-        ref Zag1 => {}
-        ref Zag2 => {}
-        ref Pole1 => {}
-        ref Pole2 => {}
-        ref Tee1 => {}
-        ref Tee2 => {}
-        ref Tee3 => {}
-        ref Tee4 => {}
+        "zig1" => {
+            piece.blocks[0].pos.y -= 2;
+            piece.blocks[1].pos.x -= 1;
+            piece.blocks[1].pos.y -= 1;
+            piece.blocks[3].pos.x -= 1;
+            piece.blocks[3].pos.y += 1;
+            piece.variant = "zig2";
+        }
+        "zig2" => {
+            piece.blocks[0].pos.x += 2;
+            piece.blocks[1].pos.x += 1;
+            piece.blocks[1].pos.y -= 1;
+            piece.blocks[3].pos.x -= 1;
+            piece.blocks[3].pos.y -= 1;
+            piece.variant = "zig3";
+        }
+        "zig3" => {
+            piece.blocks[0].pos.y += 2;
+            piece.blocks[1].pos.x += 1;
+            piece.blocks[1].pos.y += 1;
+            piece.blocks[3].pos.x += 1;
+            piece.blocks[3].pos.y -= 1;
+            piece.variant = "zig4";
+        }
+        "zig4" => {
+            piece.blocks[0].pos.x -= 2;
+            piece.blocks[1].pos.x -= 1;
+            piece.blocks[1].pos.y += 1;
+            piece.blocks[3].pos.x += 1;
+            piece.blocks[3].pos.y += 1;
+            piece.variant = "zig1";
+        }
+        "zag1" => {
+            piece.blocks[0].pos.x += 2;
+            piece.blocks[1].pos.x += 1;
+            piece.blocks[1].pos.y += 1;
+            piece.blocks[3].pos.x -= 1;
+            piece.blocks[3].pos.y += 1;
+            piece.variant = "zag2";
+        }
+        "zag2" => {
+            piece.blocks[0].pos.y += 2;
+            piece.blocks[1].pos.x -= 1;
+            piece.blocks[1].pos.y += 1;
+            piece.blocks[3].pos.x -= 1;
+            piece.blocks[3].pos.y -= 1;
+            piece.variant = "zag3";
+        }
+        "zag3" => {
+            piece.blocks[0].pos.x -= 2;
+            piece.blocks[1].pos.x -= 1;
+            piece.blocks[1].pos.y -= 1;
+            piece.blocks[3].pos.x += 1;
+            piece.blocks[3].pos.y -= 1;
+            piece.variant = "zag4";
+        }
+        "zag4" => {
+            piece.blocks[0].pos.y -= 2;
+            piece.blocks[1].pos.x += 1;
+            piece.blocks[1].pos.y -= 1;
+            piece.blocks[3].pos.x += 1;
+            piece.blocks[3].pos.y += 1;
+            piece.variant = "zag1";
+        }
+        "pole1" => {
+            piece.blocks[0].pos.x += 2;
+            piece.blocks[0].pos.y -= 1;
+            piece.blocks[1].pos.x += 1;
+            piece.blocks[2].pos.y += 1;
+            piece.blocks[3].pos.x -= 1;
+            piece.blocks[3].pos.y += 2;
+            piece.variant = "pole2";
+        }
+        "pole2" => {
+            piece.blocks[0].pos.x += 1;
+            piece.blocks[0].pos.y += 2;
+            piece.blocks[1].pos.y += 1;
+            piece.blocks[2].pos.x -= 1;
+            piece.blocks[3].pos.x -= 2;
+            piece.blocks[3].pos.y -= 1;
+            piece.variant = "pole3";
+        }
+        "pole3" => {
+            piece.blocks[0].pos.x -= 2;
+            piece.blocks[0].pos.y += 1;
+            piece.blocks[1].pos.x -= 1;
+            piece.blocks[2].pos.y -= 1;
+            piece.blocks[3].pos.x += 1;
+            piece.blocks[3].pos.y -= 2;
+            piece.variant = "pole4";
+        }
+        "pole4" => {
+            piece.blocks[0].pos.x -= 1;
+            piece.blocks[0].pos.y -= 2;
+            piece.blocks[1].pos.y -= 1;
+            piece.blocks[2].pos.x += 1;
+            piece.blocks[3].pos.x += 2;
+            piece.blocks[3].pos.y += 1;
+            piece.variant = "pole1";
+        }
+        "tee1" => {
+            piece.blocks[0].pos.x += 1;
+            piece.blocks[0].pos.y += 1;
+            piece.variant = "tee2";}
+        "tee2" => {
+            piece.blocks[0].pos.x -= 1;
+            piece.blocks[0].pos.y -= 1;
+            piece.blocks[2].pos.y += 2;
+            piece.variant = "tee3";}
+        "tee3" => {
+            piece.blocks[3].pos.x -= 1;
+            piece.blocks[3].pos.y -= 1;
+            piece.variant = "tee4";}
+        "tee4" => {
+            piece.blocks[3].pos.x += 1;
+            piece.blocks[3].pos.y += 1;
+            piece.blocks[2].pos.y -= 2;
+            piece.variant = "tee1";}
+        _ => {}
     }
+    piece
+}
+
+fn turn_left(mut piece: Piece, game: World) -> Piece {
+    piece = turn_clock(turn_clock(turn_clock(piece.clone())));
+
     let mut overlap = false;
     for block in piece.clone().blocks.iter() {
         for ground in game.blocks.iter() {
             if block.pos.y == ground.pos.y && block.pos.x == ground.pos.x {
+                overlap = true;
+                break;
+            }
+            if block.pos.y < 0 || block.pos.x < 0 || block.pos.x > 10 {
                 overlap = true;
                 break;
             }
@@ -301,9 +408,8 @@ fn turn_left(mut piece: Piece, game: World) -> Piece {
 }
 
 fn turn_right(mut piece: Piece, game: World) -> Piece {
-    for block in piece.blocks.iter_mut() {
-        block.pos.x += 1;
-    }
+    piece = turn_clock(piece.clone());
+
     let mut overlap = false;
     for block in piece.clone().blocks.iter() {
         for ground in game.blocks.iter() {
@@ -311,20 +417,24 @@ fn turn_right(mut piece: Piece, game: World) -> Piece {
                 overlap = true;
                 break;
             }
+            if block.pos.y < 0 || block.pos.x < 0 || block.pos.x > 10 {
+                overlap = true;
+                break;
+            }
         }
-        if block.pos.x == 11 {
+        if block.pos.x == 0 {
             overlap = true;
             break;
         }
     }
     if overlap {
-        piece = move_left(piece, game);
+        piece = turn_left(piece, game);
     }
     piece
 }
 
 fn main() {
-    let square_size: u8 = 10;
+    let square_size: i16 = 10;
     let mut window: PistonWindow = WindowSettings::new("Piston Window Example", [640, 480]).exit_on_esc(true).build().expect("YOU BAD AT CODE");
     let square = [0.0, 0.0, square_size.into(), square_size.into()]; // x, y, width, height
     let mut world = World {blocks: vec![]};
