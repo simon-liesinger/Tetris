@@ -361,22 +361,27 @@ fn turn_clock(mut piece: Piece) -> Piece {
         "tee1" => {
             piece.blocks[0].pos.x += 1;
             piece.blocks[0].pos.y += 1;
-            piece.variant = "tee2";}
+            piece.variant = "tee2";
+        }
         "tee2" => {
             piece.blocks[0].pos.x -= 1;
             piece.blocks[0].pos.y -= 1;
             piece.blocks[2].pos.y += 2;
-            piece.variant = "tee3";}
+            piece.variant = "tee3";
+        }
         "tee3" => {
             piece.blocks[3].pos.x -= 1;
             piece.blocks[3].pos.y -= 1;
-            piece.variant = "tee4";}
+            piece.variant = "tee4";
+        }
         "tee4" => {
             piece.blocks[3].pos.x += 1;
             piece.blocks[3].pos.y += 1;
             piece.blocks[2].pos.y -= 2;
-            piece.variant = "tee1";}
-        _ => {}
+            piece.variant = "tee1";
+        }
+        _ => {
+        }
     }
     piece
 }
